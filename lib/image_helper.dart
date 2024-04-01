@@ -20,11 +20,37 @@ class ImageHelper {
     ImageSource source = ImageSource.gallery,
     int imageQuality = 100,
   }) async {
-    final XFile? file = await _imagePicker.pickImage(
-      source: source,
-      imageQuality: imageQuality,
-    );
-    return file;
+    SmartDialog.dismiss(status: SmartStatus.allAttach);
+
+    var status = await Permission.photos.status;
+    print(status);
+
+    try {
+      if (status.isDenied ) {
+        status = await Permission.photos.request();
+      }
+      if (status.isPermanentlyDenied) {
+        await SmartDialog.showToast(
+          "Please enable photos storage permission in settings.",
+        );
+        Timer(const Duration(seconds: 3), SmartDialog.dismiss);
+        return null;
+      }
+      // SmartDialog.showLoading(msg: 'Image Loading');
+      final XFile? file = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: imageQuality,
+      );
+      // await SmartDialog.dismiss(status: SmartStatus.oading);
+      return file;
+    } on PlatformException catch (e) {
+      debugPrint(e.message.toString());
+      await SmartDialog.showToast(
+        "Please enable photos storage permission in settings.",
+      );
+      Timer(const Duration(seconds: 3), SmartDialog.dismiss);
+    }
+    return null;
   }
 
   Future<CroppedFile?> cropImage({
