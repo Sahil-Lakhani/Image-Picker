@@ -37,6 +37,10 @@ dependencies:
   image_picker: ^1.0.7
   image_cropper: ^5.0.1
   provider: ^6.1.2
+  flutter_smart_dialog: ^4.9.6
+  permission_handler: ^11.3.1
+  path_provider: ^2.1.2
+
 
 dev_dependencies:
   flutter_test:

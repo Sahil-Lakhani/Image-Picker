@@ -11,26 +11,22 @@ class ImageHelper {
   final ImagePicker _imagePicker;
   final ImageCropper _imageCropper;
 
-  Future <List<XFile?>> pickImage({
+  Future <XFile?> pickImage({
     ImageSource source = ImageSource.gallery,
     int imageQuality = 100,
-    bool multiple = false
   }) async {
-    if (multiple){
-      return await _imagePicker.pickMultiImage(imageQuality: imageQuality);
-    }
-    
     final file = await _imagePicker.pickImage(source: source, imageQuality: imageQuality);
     if (file != null) {
-      return [file];
+      return file;
+    } else {
+      return null;
     }
-    return [];
   }
 
   Future<CroppedFile?> cropImage({
     required XFile file,
     CropStyle cropStyle = CropStyle.rectangle,
-  }) async => await _imageCropper.cropImage(
+  })  =>  _imageCropper.cropImage(
     sourcePath: file.path,
     cropStyle: cropStyle,
   );

@@ -5,7 +5,6 @@ import 'package:custom_image_app/image_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -73,18 +72,17 @@ class _ProfileImageState extends State<ProfileImage> {
         TextButton(
           onPressed: () async {
             final files = await imageHelper.pickImage();
-            if (files.isNotEmpty) {
-              final file = files.first;
-              if (file != null) {
-                final croppedFile = await imageHelper.cropImage(
-                  file: file,
-                  cropStyle: CropStyle.rectangle,
-                );
-                if (croppedFile != null) {
-                  setState(() {
-                    _image = File(croppedFile.path);
-                  });
-                }
+            if (files != null) {
+              final file = files;
+
+              final croppedFile = await imageHelper.cropImage(
+                file: file,
+                cropStyle: CropStyle.rectangle,
+              );
+              if (croppedFile != null) {
+                setState(() {
+                  _image = File(croppedFile.path);
+                });
               }
             }
           },
@@ -95,45 +93,3 @@ class _ProfileImageState extends State<ProfileImage> {
   }
 }
 
-class MultipleImages extends StatefulWidget {
-  const MultipleImages({super.key});
-
-  @override
-  State<MultipleImages> createState() => _MultipleImagesState();
-}
-
-class _MultipleImagesState extends State<MultipleImages> {
-  List<File> _images = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Wrap(
-          spacing: 4,
-          runSpacing: 4,
-          children: _images
-              .map(
-                (e) => Image.file(
-                  e,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: 20),
-        TextButton(
-          onPressed: () async {
-            final files = await imageHelper.pickImage(multiple: true);
-            setState(() {
-              _images = files.map((e) => File(e!.path)).toList();
-            });
-          },
-          child: const Text('Select multiple images'),
-        ),
-      ],
-    );
-  }
-}
