@@ -12,21 +12,21 @@ class ImageCapture extends StatefulWidget {
   createState() => _ImageCaptureState();
 }
 
-final ImageHelper imageHelper = ImageHelper();
-
 class _ImageCaptureState extends State<ImageCapture> {
+  final ImageHelper _imageHelper = ImageHelper();
   XFile? _imageFile;
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await imageHelper.pickImage(source: source);
-    setState(() {
-      _imageFile = pickedFile;
-    });
+    final pickedFile = await _imageHelper.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    }
   }
 
   Future<void> _cropImage() async {
     if (_imageFile == null) {
-      // Prompt user to select a picture if _imageFile is null
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select a picture first.'),
@@ -34,15 +34,18 @@ class _ImageCaptureState extends State<ImageCapture> {
       );
       return;
     }
-    final croppedFile = await imageHelper.cropImage(
+
+    final croppedFile = await _imageHelper.cropImage(
       file: _imageFile!,
       cropStyle: CropStyle.rectangle,
     );
+
     if (croppedFile != null) {
       setState(() {
         _imageFile = XFile(croppedFile.path);
       });
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Cropped image not selected. Showing original image.'),
@@ -69,7 +72,7 @@ class _ImageCaptureState extends State<ImageCapture> {
                   ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _cropImage(),
+              onPressed: _cropImage,
               child: const Text('Crop Image'),
             ),
           ],
@@ -89,22 +92,7 @@ class _ImageCaptureState extends State<ImageCapture> {
             ),
           ],
         ),
-        // Uploader(file: _imageFile)
       ),
     );
-  }
-}
-
-class Uploader extends StatefulWidget {
-  const Uploader({super.key});
-
-  @override
-  State<Uploader> createState() => _UploaderState();
-}
-
-class _UploaderState extends State<Uploader> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
