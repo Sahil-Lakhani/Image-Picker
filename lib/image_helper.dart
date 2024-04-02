@@ -23,7 +23,6 @@ class ImageHelper {
     SmartDialog.dismiss(status: SmartStatus.allAttach);
 
     var status = await Permission.photos.status;
-    print(status);
 
     try {
       if (status.isDenied ) {
@@ -36,12 +35,12 @@ class ImageHelper {
         Timer(const Duration(seconds: 3), SmartDialog.dismiss);
         return null;
       }
-      // SmartDialog.showLoading(msg: 'Image Loading');
+
       final XFile? file = await _imagePicker.pickImage(
         source: source,
         imageQuality: imageQuality,
       );
-      // await SmartDialog.dismiss(status: SmartStatus.oading);
+  
       return file;
     } on PlatformException catch (e) {
       debugPrint(e.message.toString());
@@ -55,7 +54,7 @@ class ImageHelper {
 
   Future<CroppedFile?> cropImage({
     required XFile file,
-    CropStyle cropStyle = CropStyle.rectangle,
+    required CropStyle cropStyle ,
   }) async {
     try {
       final croppedFile = await _imageCropper.cropImage(

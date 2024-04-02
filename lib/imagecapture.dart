@@ -37,7 +37,7 @@ class _ImageCaptureState extends State<ImageCapture> {
 
     final croppedFile = await _imageHelper.cropImage(
       file: _imageFile!,
-      cropStyle: CropStyle.rectangle,
+      cropStyle: CropStyle.circle,
     );
 
     if (croppedFile != null) {
@@ -66,14 +66,19 @@ class _ImageCaptureState extends State<ImageCapture> {
           children: <Widget>[
             _imageFile == null
                 ? const Text('No image selected.')
-                : Image.file(
-                    File(_imageFile!.path),
-                    height: 400,
+                : ClipOval(
+                    child: Image.file(
+                      File(_imageFile!.path),
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _cropImage,
-              child: const Text('Crop Image'),
+              child: const Text('Edit Image'),
             ),
           ],
         ),

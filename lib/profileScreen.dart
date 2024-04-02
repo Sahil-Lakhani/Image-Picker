@@ -40,33 +40,37 @@ class ProfileImage extends StatefulWidget {
 
 class _ProfileImageState extends State<ProfileImage> {
   File? _image;
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Center(
-          child: _image != null
-              ? Image.file(
-                  _image!,
-                  width: 228,
-                  height: 228,
-                  fit: BoxFit.cover,
-                )
-              : Container(
-                  width: 128,
-                  height: 128,
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Text(
-                      widget.initials,
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
+          child: CircleAvatar(
+            radius: 114, // Half of 228
+            backgroundColor: Colors.grey,
+            child: _image != null
+                ? ClipOval(
+                    child: Image.file(
+                      _image!,
+                      width: 228,
+                      height: 228,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Container(
+                    width: 228,
+                    height: 228,
+                    child: Center(
+                      child: Text(
+                        widget.initials,
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
+          ),
         ),
         const SizedBox(height: 20),
         TextButton(
@@ -77,7 +81,7 @@ class _ProfileImageState extends State<ProfileImage> {
 
               final croppedFile = await imageHelper.cropImage(
                 file: file,
-                cropStyle: CropStyle.rectangle,
+                cropStyle: CropStyle.circle,
               );
               if (croppedFile != null) {
                 setState(() {
@@ -92,4 +96,3 @@ class _ProfileImageState extends State<ProfileImage> {
     );
   }
 }
-
